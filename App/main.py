@@ -27,7 +27,7 @@ while True:
     gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     gray = clahe.apply(gray)
 
-    _, shadow_mask = cv.threshold(gray, 20, 0, cv.THRESH_BINARY)
+    _, shadow_mask = cv.threshold(gray, 80, 0, cv.THRESH_BINARY_INV)
 
     gray = cv.inpaint(gray, shadow_mask, inpaintRadius=7, flags=cv.INPAINT_TELEA)
     gray = np.array(255 * (gray / 255) ** gamma, dtype='uint8')
@@ -49,12 +49,12 @@ while True:
 
             print(result)
             if result == 0:
-                cv.rectangle(frame,(x,y),(x+w,y+h),(0,0,255),2)
+                cv.rectangle(gray,(x,y),(x+w,y+h),(0,0,255),2)
                 result = 'No Mask'
             else:
-                cv.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
+                cv.rectangle(gray,(x,y),(x+w,y+h),(0,255,0),2)
                 result = 'Mask'
-    cv.imshow('Camera', frame)
+    cv.imshow('Camera', gray)
     if cv.waitKey(1) == ord('q'):
         break
 
